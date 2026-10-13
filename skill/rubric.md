@@ -1,55 +1,12 @@
-# Rubric: is this plan ready to post and build from?
-
-<!--
-THIS IS THE PART YOU WRITE. The skill in SKILL.md executes whatever
-checks you define here (via your procedure.md). It ships empty on
-purpose: the judgment is your work.
-
-A filled rubric must contain:
-
-1. At least one row in the checks table. Each row needs all four
-   columns:
-   - Check: a short name (used in the output JSON).
-   - Evidence: exactly what to look at, and where in the package. Name
-     the part (the plan's scope statement, the test plan read against
-     the repro evidence's steps, the plan comment read against the
-     thread highlights, the repo-facts block) or a location from your
-     references/evidence-guide.md. "The plan" is not a source; "the
-     plan's stated cause read against what the repro evidence shows"
-     is.
-   - Pass condition: a decision rule about the OUTCOME that someone
-     else could apply and get your answer. Judge the thing itself (is
-     this one bounded change? could a stranger start executing it?),
-     never the write-up's shape (how many sections it has, how long it
-     is, whether it uses headings). Structure-shaped checks are what
-     make graders disagree with themselves.
-   - Weight: `required` (a fail here holds the package) or `preferred`
-     (never changes the verdict).
-
-2. A verdict rule below the table: how the check grades combine into
-   accept (ready) or reject (hold), including how `unclear` is
-   treated. The verdict space is binary. If you write no rule for
-   `unclear`, the skill treats it as fail.
-
-Cover what actually gets bad plans posted. The lecture named the
-failure families: the diagnosis ignores or contradicts the reproduced
-evidence, the change is unbounded (scope creep), the plan targets the
-symptom while the evidence points at the cause, a stranger could not
-start executing it, the test plan proves nothing observable, the
-unknowns are dressed up as certainty, and the comment ignores what the
-thread or the repo's stated conventions ask. A rubric that ignores a
-family will fail eval packages designed around that family.
--->
-
-## Checks
+# Rubric: ready to post and build
 
 | Check | Evidence | Pass condition | Weight |
 |---|---|---|---|
-|  |  |  |  |
+| grounded-cause | Repro observations and controls compared with the plan diagnosis and intervention. | The proposed intervention addresses a cause consistent with the observed failure and controls. It does not change correct behavior merely to hide a failing assertion. Unproven causes are hypotheses with a bounded verification step before editing. | required |
+| bounded-scope | Plan changes, exclusions and dependencies compared with the issue and thread. | One bounded outcome addresses the reproduced issue; every proposed edit is necessary for that outcome. Independent cleanups, rewrites or feature additions are excluded. | required |
+| executable | Plan implementation steps, target areas and unknowns. | A stranger can locate the relevant code and begin the proposed change or a specific investigation without inventing the approach. Exact line numbers or a completed patch are unnecessary. Dependencies and blocking unknowns have concrete resolution steps. | required |
+| decisive-tests | Plan validation compared with repro steps, actual and expected behavior, and controls. | Validation exercises the failing behavior through the relevant code path and states an observable success condition plus a relevant regression control. Commands or sufficiently specific test cases suffice; generic promises to run tests do not. | required |
+| honest-claims | Plan certainty, risks and deviation notes compared with available evidence. | Claims distinguish observed facts from hypotheses; unresolved risks have bounded checks. No unsupported guarantee or contradiction is presented as established fact. Recorded deviations explain what changed and why; absence of deviations in an unbuilt draft is not a failure. | required |
+| thread-conventions | Candidate comment compared with maintainer requests, thread highlights and repo contribution/AI policy. | The comment communicates its own diagnosis, bounded approach and validation, respects applicable maintainer directions and contribution requirements, and supplies required disclosure. It does not substitute a generic promise or another person's plan for its own. Judge obligations actually stated in the evidence; invent no disclosure or reservation requirement. | required |
 
-## Verdict rule
-
-<!-- State how the grades above combine into accept or reject, and how
-unclear is treated. Example shape (write your own): "accept if every
-required check passes; preferred checks never change the verdict;
-unclear counts as fail." -->
+Accept only if every required check passes. Fail or unclear on any required check means reject. Preferred checks never alter the verdict. Missing necessary evidence is unclear; explicit contradictions are fail. A concise plan can pass without prescribed headings or length.

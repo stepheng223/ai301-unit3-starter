@@ -1,0 +1,53 @@
+OS: macOS-26.5.1-arm64-arm-64bit
+
+Python 3.12.3
+
+99673c7f53aa3c4666f99d38641a6ef0512a22e6
+
+$ .venv/bin/python -m pytest tests/unit/test_relevance_scorer.py -q -rxX
+
+..x................                                                      [100%]
+=========================== short test summary info ============================
+XFAIL tests/unit/test_relevance_scorer.py::TestRelevanceScorer::test_query_with_partial_overlap - issue #64: relevance scorer 'partial overlap' fixture actually has full overlap
+18 passed, 1 xfailed in 0.10s
+
+
+Exit: 0
+
+$ .venv/bin/python -m pytest tests/unit/test_relevance_scorer.py -q --runxfail -k partial_overlap
+
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ TestRelevanceScorer.test_query_with_partial_overlap ______________
+
+self = <tests.unit.test_relevance_scorer.TestRelevanceScorer object at 0x105e8e180>
+scorer = <rag.evaluator.relevance_scorer.RelevanceScorer object at 0x10537df40>
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="issue #64: relevance scorer 'partial overlap' fixture actually has full overlap",
+    )
+    def test_query_with_partial_overlap(self, scorer):
+        """Test query with partial overlap returns score between 0 and 1."""
+        query = "Python Django web framework"
+        chunks = [
+            {"text": "Django is a Python web framework for rapid development"},
+        ]
+    
+        score = scorer.score(query, chunks)
+    
+        assert isinstance(score, float)
+        assert 0.0 <= score <= 1.0
+>       assert 0.3 < score < 0.9  # Partial overlap should be in middle range
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 1.0 < 0.9
+
+tests/unit/test_relevance_scorer.py:58: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-12 23:57:34 [info     ] relevance_scored               avg_score=1.0 chunks_count=1 query_len=4
+=========================== short test summary info ============================
+FAILED tests/unit/test_relevance_scorer.py::TestRelevanceScorer::test_query_with_partial_overlap
+1 failed, 18 deselected in 0.04s
+
+
+Exit: 1

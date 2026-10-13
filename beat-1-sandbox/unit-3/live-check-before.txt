@@ -1,0 +1,36 @@
+**plan-check, live mode, issue #64**
+
+Scope: the repo line is filled in (`codepath/pathreview-ai301-fa26-howard`) and the issue is in that repo, so grading proceeds. I used the issue facts, thread summary and posted repro as you supplied them and did not re-fetch.
+
+- **grounded-cause: pass.** The repro shows the fixture chunk contains all four query terms and the scorer returns 1.0. The plan changes the chunk, not the scorer, and the perfect-match and zero-overlap controls stay untouched. The tokenizer assumption has a bounded check: inspect the token intersection before accepting the change.
+- **bounded-scope: pass.** It edits one test, swaps one chunk, and removes that test's strict xfail marker, which the contributing guide requires. It explicitly excludes scorer changes, relaxing the assertion, and unrelated cleanup.
+- **executable: pass.** It names the exact test, the replacement chunk text, the decorator to remove, and the setup commands.
+- **decisive-tests: pass.** It re-runs the repro's two commands before and after. Before: 18 passed, 1 xfailed, and `1.0` with `--runxfail`. After: 19 passed with no xfail or XPASS. The perfect-match and zero-overlap controls are named, and a direct scorer call is expected to give 1.0 then 0.75.
+- **honest-claims: pass.** 0.75 is labeled "expected". Untested areas (other platforms, the full app) are stated, and the tokenizer risk has a check. The deviations section correctly says the build is pending.
+- **thread-conventions: pass.**
+  - The comment gives its own diagnosis, scope and validation.
+  - It does not borrow the classmate's query-change plan, and house rules allow an independent plan.
+  - It follows the branch and xfail-removal conventions.
+  - It includes an AI-assistance disclosure.
+
+**Voice-guide notes:** I found no rule violations.
+- Rule "Promise work before claiming results": the comment says "I plan to…" and "I'll…" for future work. The one past-tense claim, `--runxfail` showing 1.0, is backed by the repro.
+- Rule "Keep conclusions inside the evidence": the comment states that it hasn't checked other platforms.
+- Optional polish: name the environment (macOS, Python 3.12.3) in the comment itself instead of relying on the link.
+
+**Procedure gaps:** none that affected this grading.
+
+```json
+{
+  "item": "https://github.com/codepath/pathreview-ai301-fa26-howard/issues/64",
+  "checks": [
+    {"name": "grounded-cause", "grade": "pass", "evidence": "Repro: chunk contains all 4 query terms, scorer returns 1.0, sibling controls pass; plan fixes the chunk, not the scorer, and verifies the tokenizer before accepting."},
+    {"name": "bounded-scope", "grade": "pass", "evidence": "Edits only test_query_with_partial_overlap's chunk and its strict xfail marker; scorer, assertion band and unrelated fixtures explicitly excluded."},
+    {"name": "executable", "grade": "pass", "evidence": "Names the exact test, replacement chunk text, decorator to remove, and the setup and pytest commands."},
+    {"name": "decisive-tests", "grade": "pass", "evidence": "Before/after runs of the repro's two commands: 18 passed/1 xfailed then 19 passed with no XPASS, plus perfect-match and zero-overlap controls and a direct 1.0 vs 0.75 scorer check."},
+    {"name": "honest-claims", "grade": "pass", "evidence": "0.75 is labeled 'expected'; the plan states platform/app coverage limits, bounds the tokenizer risk with a check, and notes the build is pending."},
+    {"name": "thread-conventions", "grade": "pass", "evidence": "Comment gives its own diagnosis, approach and validation; follows fix/<issue>-<slug> and the xfail-removal rule; includes AI disclosure; does not borrow the classmate's query-change plan."}
+  ],
+  "verdict": "accept"
+}
+```

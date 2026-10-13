@@ -1,66 +1,19 @@
-# Evidence guide: where evidence lives in a plan package
-
-<!--
-THIS IS THE PART YOU WRITE (second week running: the judgment files
-stay in your hands). The skill uses this guide as its map: for every
-kind of evidence a rubric check names, this file says WHERE to find it
-in a plan package and WHAT GOOD LOOKS LIKE when you do.
-
-Under each family heading below, write:
-
-- Where it lives: the exact places to look. In an eval bundle (which
-  section of the package: the issue context, the repro-evidence block,
-  the candidate plan's scope statement or test plan, the plan comment,
-  the repo-facts block). In live mode (where on GitHub or in the
-  draft: the issue thread, the student's posted repro comment, the
-  repo's docs, the draft plan and comment).
-- What good looks like: one or two sentences someone else could apply.
-  Prefer observable conditions ("the stated cause cites behavior the
-  repro evidence actually shows") over adjectives ("diagnosis is
-  solid").
-
-A rubric check whose evidence this guide cannot locate is a check
-nobody else can execute, and this week that cuts twice: your
-procedure.md tells the skill WHEN to gather each family, and this
-guide tells it WHERE. Write the map you wish your executor had.
--->
+# Evidence guide
 
 ## Diagnosis and grounding
-
-<!-- Where the plan states its cause, and where the repro evidence
-pins down the behavior that cause must explain. What it means for a
-diagnosis to follow from the evidence rather than contradict or
-ignore it. -->
+Eval: read the repro-evidence block's inputs, observations and controls, then the candidate plan's diagnosis and proposed intervention. Live: read the student's posted repro comment (or quoted house repro pack) and draft plan. Good evidence connects the intervention to what failed and preserves behavior shown correct by controls. A hypothesis is acceptable with a concrete verification step.
 
 ## Scope
-
-<!-- Where the plan bounds itself: the in-scope statement, the
-not-in-scope line, the files or areas named. What one bounded change
-looks like next to a drive-by rewrite. -->
+Eval: compare candidate plan edits and exclusions against issue context and thread highlights. Live: compare draft scope to issue body and maintainer comments. Every edit serves the same reproduced outcome; unrelated improvements do not become necessary just because they touch the same file.
 
 ## Executability
-
-<!-- Where the plan says what will actually be done: files or areas,
-approach, order of work. What it means for a stranger to be able to
-start executing without asking the author anything. -->
+Eval: gather target files or identifiable areas, proposed operations, dependencies and investigation steps from the candidate plan. Live: use the draft and referenced repository files/docs. A stranger can start the specific operation or investigation; no patch, exact line numbers or rigid format is required.
 
 ## Test plan
-
-<!-- Where the plan says how success will be observed, and how that
-maps onto the repro evidence's steps and artifacts. What a decisive
-test plan names that a vague one does not. -->
+Eval: compare candidate validation with the repro's trigger, expected/actual result and controls. Live: compare draft commands/test cases against the posted reproduction. Record which observable result distinguishes success from the old failure and which adjacent behavior stays correct. Merely naming a test suite is insufficient.
 
 ## Honesty
-
-<!-- Where claims meet uncertainty: risks, unknowns, and deviations.
-How to tell stated unknowns from false confidence, and where an
-honest mid-build deviation gets recorded. -->
+Eval: compare claims and risks in the plan/comment with repro observations and issue evidence. Live: also read deviations in plan.md after a build. Record unsupported certainty, acknowledged uncertainty and its resolution step. An honest deviation is evidence to evaluate, not an automatic failure; an unbuilt plan need not invent deviations.
 
 ## Comms
-
-<!-- Where the words meet the thread and the repo: the plan comment
-read against the issue's maintainer signals (thread highlights, or
-the live thread) and against the repo-facts block's stated templates,
-contributing asks, and contribution policy (including AI-use
-disclosure requirements). What thread-aware looks like next to
-boilerplate. -->
+Eval: read candidate plan comment alongside thread highlights and repo-facts template, contributing and AI-policy requirements. Live: read the full issue thread and applicable contribution/template/policy documents, then the draft comment and carried-over voice guide. Record explicit obligations and whether the comment meets each. Do not invent policies; missing material required to verify a known obligation is unclear. Classmate plans do not reserve issues under Path Review house rules.

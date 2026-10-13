@@ -1,0 +1,910 @@
+{
+  "rubric": "../tools/plan-check/rubric.md",
+  "evidence": "../tools/plan-check/references/evidence-guide.md",
+  "procedure": "../tools/plan-check/procedure.md",
+  "model": "sonnet",
+  "agreement": [
+    18,
+    20
+  ],
+  "results": [
+    {
+      "id": "pkg-01",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan blames the tokenizer, but the repro's --debug shows argparse parse_args raises the error before items reach HTTPie's item parser; the no -v control parses the same items fine."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Rewrites the item tokenizer, which the repro shows is not involved, and excludes argparse, the actual failure point."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "The step 'extend the regex to accept tokens following an optional flag' targets code that already parses these items; no investigation step resolves the contradiction."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Tokenizer unit tests bypass the argparse path and would pass today; no regression control for the no -v case or 3.13."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "'The Python-version difference is a red herring' is asserted as fact against repro step 3 and the --debug result; no verification step."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment repeats the contradicted 'not argparse' root cause and does not build on the repro evidence the bug template requires."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "wrong-cause",
+      "calibration": false
+    },
+    {
+      "id": "pkg-02",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Underflow at printer.rs:934 fits both controls (no background -> no subtraction; width 2 -> no overshoot); saturating_sub yields the empty fill the issue expects."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "One outcome (remove width-1 abort): fill clamp, issue-named sibling at 795, one test; 'Not in scope: redesigning wide-char wrapping'; audit findings only noted."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names src/printer.rs sites 934 and 795, saturating_sub operation, grep audit step, and tests/ regression case."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Re-runs repro expecting exit 0, re-runs both controls unchanged, adds integration test pinned at width 1."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "States 'visual result at width 1 stays imperfect' and the risk of other underflow sites outside print_line with a bounded grep check."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states diagnosis, saturating clamps at both sites, and width-1 test; no maintainer directions or AI policy exist in the evidence; mentions #3803 cross-reference."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-03",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Repro shows gzip parsing '-10.txt.gz' as options while the control normal.txt.gz works; plan appends '--' before the path, which targets that cause and leaves correct behavior alone."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "'In scope: the argument separator only. Not in scope: shell quoting, the choice of tools, or the matching logic.'"
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names crates/cli/src/decompress.rs command builder with a one-line change; unverified tools (bzip2, lz4, brotli) have a manpage-check resolution step."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Re-run repro: match from -10.txt.gz with exit 0, control file still matches, dash-named fixture added to compression integration tests."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "Separates locally verified gzip/xz/zstd from the remaining three, which get a bounded verification and an open-question note if unsupported."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its own plan and validation, acknowledges #3224/#3314 without substituting them, and discloses AI assistance and own-words authorship per the AI policy."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-04",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "decisive-tests",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Diagnosis (console input loop keeps reading) fits the repro, but the docs-only intervention leaves it unfixed; expected behavior is keys reaching less without the workaround, and the thread already names light_windows.go as the culprit."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Docs-only scope excludes 'any change to fzf's input handling code', so it does not address the reproduced issue that the maintainer located there."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Named targets: man page execute section, README execute examples, FAQ entry; a stranger can start each."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Test plan only confirms less works with the documented > /dev/tty form (the control run); it never exercises the failing no-redirect path and states no regression control."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "Diagnosis and 'reliable workaround' claim are backed by the repro and its control run; no unsupported guarantee of a code fix."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment states no validation and ignores the maintainer's culprit pointer, patched binary and first-key caveat, substituting a docs workaround for engagement with the actual bug."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "thread-convention",
+      "calibration": false
+    },
+    {
+      "id": "pkg-05",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Repro: cached response served with no request until A's 90-day expiry; plan adds a 24h max-age cap in the freshness check, leaving the expiry path unchanged."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Single change in get_notice_response_from_cache() using NOTICES_DECORATOR_DISPLAY_INTERVAL; display cadence, channel protocol and storage format excluded."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names conda/notices/cache.py and tests/notices/test_cache.py, with the operation: compute cached response age from the stored timestamp, treat as stale beyond 24h."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Backdate cache 25h: step 4 must fetch and print A and B (second request in access log); un-backdated stays cached; unit tests cover stale-by-age, fresh-by-age and the unchanged expiry path."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "Diagnosis ties to the repro and issue; the one extra request per channel per 24h is named as the cost; no unsupported guarantee presented as established."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its approach, tests and scope boundary, wiring the constant into get_notice_response_from_cache() per danyeaw's 2026-08-17 clarification; the AI policy states no disclosure obligation."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-06",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan states 'traced it to the preload structure mismatch' as fact, but the repro only shows preloaded-vs-pulled difference and a swallowed export error; no bounded verification before a pipeline rebuild."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Bundles containerd 1.7.28 bump, cross-runtime abstraction (docker/containerd/cri-o) and CI matrix; plan itself says it is 'bigger than the one-line symptom fix'."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "Targets are broad ('all three runtime implementations', preload scripts) with no concrete first step or investigation of the actual export error."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Test plan reruns repro steps 2-3 but names no regression control (pulled nginx:alpine save) and no check of the loud-failure path; 'CI matrix passes' is generic."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "'Removes the whole class' and 'traced it to' are unsupported certainty; no risks or verification steps stated for the unproven cause or the version bump."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment gives diagnosis and approach but no validation and presents the diagnosis as confirmed; nirs' note about swallowed errors is one item among five."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "scope-creep",
+      "calibration": false
+    },
+    {
+      "id": "pkg-07",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "decisive-tests",
+        "honest-claims"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Instance-method control prints friendly errors in the same build, so the FES is present; 'tree-shaken out' contradicts it, and the thread's prototype-only `_friendlyError` cause is ignored."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Edits are build config plus a CI assertion, unrelated to the static-method failure; the Vector class where the fault lies is declared out of scope."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names rollup.config.mjs and package.json and a concrete operation (mark FES as side-effectful), so a stranger can start."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Snippet run checks the failing path, but the only regression guard is a bundle-content assertion; no behavioral control such as the instance-method path."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "'The root cause is the 2.x build pipeline tree-shaking' is asserted as fact, contradicted by the repro control, with no verification step."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its own diagnosis, approach and CI validation; no stated maintainer direction or disclosure obligation is violated."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "wrong-cause",
+      "calibration": false
+    },
+    {
+      "id": "pkg-08",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Uniform-sign controls correct and mixed-sign wrong matches the plan's diagnosis that mixed-sign indices sort apart in delpaths_sorted; fix normalizes indices before grouping."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Only the delpaths_sorted grouping plus tests are edited; the tombstone rework is explicitly out of scope."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names src/jv_aux.c (delpaths_sorted) and tests/jq.test, with a concrete normalize-before-grouping step; the out-of-range risk is resolved by matching leaf behavior."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Repro commands must print the expected output, the two controls stay unchanged, and the existing simultaneous-deletion test (around line 1184) must pass."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "Out-of-range negative indices are acknowledged as a risk with a bounded check; the 'confirmed by controls' wording is mildly strong but consistent with the evidence."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its own approach and tests, acknowledges #3543/#3548, defers the tombstone rework; no AI policy exists, so no disclosure is required."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-09",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Backslash paths vs '/'-only glob regex matches the regex-mode control; normalizing only the match candidate leaves regex mode and the Linux control unchanged."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Only the Windows-gated candidate normalization at the walk.rs match site; option 1 and regex-mode changes explicitly deferred."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names src/walk.rs match site, src/main.rs as no-change review note, tests/tests.rs Windows-gated fixture test, and the operation (map '\\' to '/' in match bytes only)."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Pattern spellings must print C:\\t\\fixture\\src\\foo\\a.spec.ts; regex-mode and Linux controls stay unchanged (minor looseness: 'double-backslash form' is not a glob form in the repro)."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "Flags the Unix '\\'-in-filename risk and bounds it with the Windows gate and the Linux control; minor misattribution of the 'simpler route' remark to the collaborator instead of petrroll, but the fact is supported in the thread."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its own approach, validation and rebase-on-#2089 plan; follows the maintainer's option 2; no issue-comment disclosure is required by the stated policy."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-10",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan says 'clearly have performance problems' and 'optimize whatever profiling turns up'; ignores repro showing git_status 1873ms vs git status 350ms and git_branch 41ms, and no hypothesis with a verification step."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Open-ended: scoop investigation, cross-prompt caching, and 'spawning fewer git subprocesses in general' are independent rewrites, not one bounded outcome."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "Steps are 'dig into', 'look into', 'investigate'; no target module, file or concrete operation named."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Test plan is 'should feel fast' and 'timings should look much better'; no threshold, no baseline of 1873ms on the large repo, no regression control."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "Presents 'clearly have performance problems' as fact and promises 'report back when things are faster' with no evidence or bounded check; scoop is raised as a lead with no check."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment gives no diagnosis (git_status vs raw git), no bounded approach and no validation, only a generic promise to 'optimize whatever shows up hot'. No AI policy is stated, so no disclosure is required."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "unbuildable",
+      "calibration": false
+    },
+    {
+      "id": "pkg-11",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "executable",
+        "honest-claims"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan blames collect, but the repro control shows top-level [.a] already yields [null]; only the select/and/or contexts (DontAutoCreate via SingleReadonlyChildContext) drop the key."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Single outcome, limited to operator_collect.go and its test file; no unrelated cleanups proposed."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "Approach 'always contribute null' targets collect, which already works at top level; a stranger would have to invent the real (context-flag) approach."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Issue's three commands with expected 1, {}, true, plus a top-level control and new scenarios inside and outside conditions."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "'The collect operator is the defect' is asserted as fact and contradicted by the control; 'contained to the collect operator file' is unsupported."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states its own diagnosis, approach and validation; no maintainer directions or AI-disclosure obligations are stated in the evidence."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "wrong-cause",
+      "calibration": false
+    },
+    {
+      "id": "pkg-12",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan names no failing emission site; calls the bug 'a symptom of accumulation' and replaces the whole wrapping logic, with no bounded verification step."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "One column-0 indent bug paired with a new algorithm, blockquote/footnote unification, proseWrap changes, a new markdownIndentAdjust option, and a module restructure."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "Only target is printer-markdown.js; steps are 'replace with a new algorithm' and 'normalize all', so a stranger must invent the approach."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "'Repro formats with indent preserved; suite passes after snapshot updates' gives no regression control, and snapshot updates can mask changed behavior."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "'Fixes the class rather than the instance' is unsupported, the diagnosis is presented as settled, no risks are listed, and tats-u's equivalent-HTML finding is ignored."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment offers an unbounded rewrite, does not respond to tats-u's thread note, and does not say the plan was understood or tested as the AI usage policy asks."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "scope-creep",
+      "calibration": false
+    },
+    {
+      "id": "pkg-13",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Plan ties top-jump and stale blanking to viewport clamp plus missing invalidation, matching repro step 3-4 and DHowett's 'invalidation bug'; alacritty control sets target; clamp-layer unknown is named with a check."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Only the ESC[3J branch of AdaptDispatch::EraseInDisplay; mouse-selection issue and scrollback redesign explicitly excluded."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names AdaptDispatch::EraseInDisplay scrollback branch with three concrete steps: re-anchor viewport, invalidate visible region, add adapter test."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Re-run repro: viewport snaps to bottom not top, no blank region without resize; adapter unit test; conhost repro as regression control."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "'I have not yet verified which layer clamps the viewport' named as an unknown with conhost check; no unsupported guarantees."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment states diagnosis (viewport re-anchor and invalidation), approach, unit test, defers mouse selection per thread; no AI policy stated so no disclosure required."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-14",
+      "verdict": "reject",
+      "failed_checks": [
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Drain-at-reattach intervention fits leak-only-on-reattach, clean fresh create, clean 0.44.1; debug-log trace is the bounded verification step before editing."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "One change to the Unix reattach handshake; Windows variant and theme-detection caching explicitly deferred with reasons."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names zellij-server client connection handling and zellij-client query issuance, with a concrete first step: trace query issuance via `zellij --debug`."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "5 consecutive SSH reattach cycles with no rgb strings, plus fresh-create clean, 0.44.1 parity and cache control 'always clean'."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "Asserts 0.44.1 'predates the reattach-path change in 0.44.2' and that fresh attach performs the same queries behind the loading screen; neither is in the repro or issue evidence, yet both are presented as grounding."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment gives no diagnosis or validation beyond 'Report-back once I have the handshake change behind the repro loop', and claims a 0.44.2 regression window though the repro compared 0.44.3 to 0.44.1."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    },
+    {
+      "id": "pkg-15",
+      "verdict": "reject",
+      "failed_checks": [
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Change 1 (500 ms default) matches the control matrix where only the 250 ms vs 500 ms timeout flips ETIMEDOUT outcomes."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Changes 2-5 (undici migration, settings field, #12810 UI fix, retry wrapper) are independent of the reproduced timeout; comment says it covers 'the whole failure surface'."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "'Replace node-fetch with undici across the desktop sync code' and 'error surfacing' name only broad areas, with no concrete files or approach and no resolution for dependencies."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "10/10 slow-connect sync is decisive for change 1, but there is no regression control for the fetch replacement or the retry wrapper."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "Unsupported assertions: undici 'handles Happy Eyeballs natively' and 'covers the whole failure surface'; no bounded checks for the library-swap risks."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment proposes a multi-part rewrite starting with undici, ignoring that mrjo118 already made the 500 ms change; no AI-policy obligation exists, so none is invented."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "scope-creep",
+      "calibration": false
+    },
+    {
+      "id": "pkg-16",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Plan blames the post-read astype, but repro step 4 shows the column is already int64 1 after pyarrow's inferred parse, before any cast; re-padding hides the symptom."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "Single outcome confined to arrow_parser_wrapper.py with python engine and pyarrow options excluded; no unrelated cleanups."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "Targets the wrong location; width recovery 'max digit count plus the pad the CSV used' is unrecoverable after inference (0150 vs 150); test file test_read_fwf.py is for fixed-width files."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "Test plan only says the example matches python engine and 'the parser test suite passes'; no concrete case, success condition or control such as pyarrow native or non-padded values."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "States 'The cast is where the data is damaged' as fact, contradicted by repro step 4; no hypothesis or bounded verification step."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment's cast-based diagnosis contradicts the maintainer's explanation (jorisvandenbossche) and ignores the column_types direction; promises only generic 'parser tests' and a green suite."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "wrong-cause",
+      "calibration": false
+    },
+    {
+      "id": "pkg-17",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Repro isolates tmux mouse-on + 0.62.x vs 0.61.1, but the plan offers no diagnosis or intervention: 'figure out what happened', 'fix once the cause is clear', with no bounded verification step."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "unclear",
+          "evidence": "No concrete edits are named ('try different mouse protocols'), so the plan cannot be shown to limit itself to one bounded outcome."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "'gocui? tcell? not sure which layer is responsible' and 'look at what changed in 0.62' give no target area or concrete investigation method, so a stranger must invent the approach."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "'scrolling should work correctly under tmux afterwards, and nothing else should feel broken' names no trigger, observable success condition, or regression control (tmux mouse off, 0.61.1)."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "Presents 'clearly changed somewhere between 0.61 and 0.62' as fact and claims 'reproduce this exactly' though maintainer could not reproduce on tmux 3.6b/3.7; no hypotheses are separated from facts and no bounded risk checks."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment is a generic promise ('investigate\u2026 experiment\u2026 track down') with no diagnosis, bounded approach, or validation, and ignores the maintainer's stated uncertainty and selective-review policy."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "unbuildable",
+      "calibration": false
+    },
+    {
+      "id": "pkg-18",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Step 1 adds recover() to mask the panic; step 2 states no cause or verification step despite the repro isolating iter.Seq2 range + defer in the loop."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Global panic recovery plus linter fixes plus 'maybe also check other linters' is multiple outcomes with independent cleanups."
+        },
+        {
+          "name": "executable",
+          "grade": "fail",
+          "evidence": "'Somewhere around linter execution' and 'upstream or vendored, whichever is easier' leave the target and approach unspecified; ldez's existing upstream PRs are not accounted for."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "'Should not panic on the reproduction anymore' gives no command, success condition, or regression control (defer outside loop / slice range)."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "States 'make the panic go away' with no established cause and no bounded check; ignores that the maintainer has already opened upstream fixes."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "Comment ignores ldez's diagnosis (defer in for) and upstream PRs sqlclosecheck#50/rowserrcheck#34, and offers only a generic promise to report back."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "unbuildable",
+      "calibration": false
+    },
+    {
+      "id": "pkg-19",
+      "verdict": "reject",
+      "failed_checks": [
+        "grounded-cause",
+        "bounded-scope",
+        "executable",
+        "decisive-tests",
+        "honest-claims",
+        "thread-conventions"
+      ],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "fail",
+          "evidence": "Repro shows only the custom appear-to class leaks while the default-class control works; the plan rebuilds the whole lifecycle and names no cause or bounded verification step."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "fail",
+          "evidence": "Plan adds a state machine, a new persistClass prop, a test harness migration and a TransitionGroup port, which are independent rewrites and feature additions."
+        },
+        {
+          "name": "executable",
+          "grade": "unclear",
+          "evidence": "Target module and operations are named, but the unknown cause has no resolution step and the large dependencies are not concrete, so a stranger cannot start without inventing the approach."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "fail",
+          "evidence": "The test plan has an observable success condition but no regression control from the repro, and otherwise relies on suites running on a harness the plan rewrites."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "fail",
+          "evidence": "Claims the leak class becomes 'unrepresentable' with no supporting evidence, and states no risks or bounded checks."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "fail",
+          "evidence": "The comment promises a rebuild touching most transition code, does not engage the maintainer's 'works as intended' reply, and does not state a bounded approach or validation."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "scope-creep",
+      "calibration": false
+    },
+    {
+      "id": "pkg-20",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "grounded-cause",
+          "grade": "pass",
+          "evidence": "Stale `prev` after mid-print growth matches the repro panic at page.zig:1487 and the no-hyperlink control that passes."
+        },
+        {
+          "name": "bounded-scope",
+          "grade": "pass",
+          "evidence": "One change (recompute `prev` only on capacity change); excludes unconditional recompute and wider page-memory refactor."
+        },
+        {
+          "name": "executable",
+          "grade": "pass",
+          "evidence": "Names Terminal.print grapheme paths incl. .wide branch plus a page generation counter, with snapshot/compare/recompute steps."
+        },
+        {
+          "name": "decisive-tests",
+          "grade": "pass",
+          "evidence": "Both fuzz-derived cases as regression tests, unchanged no-hyperlink control, plus #11249 corpus re-run."
+        },
+        {
+          "name": "honest-claims",
+          "grade": "pass",
+          "evidence": "States per-print cost is unmeasured, gives a fallback to the two growth sites, flags other cached pointers as open."
+        },
+        {
+          "name": "thread-conventions",
+          "grade": "pass",
+          "evidence": "Comment follows mitchellh's recompute-on-capacity-change direction, gives own mechanism and validation; no AI use shown in bundle, so no disclosure obligation triggered."
+        }
+      ],
+      "error": null,
+      "gold": "reject",
+      "category": "thread-convention",
+      "calibration": false
+    }
+  ]
+}

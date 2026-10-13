@@ -1,0 +1,25 @@
+$ .venv/bin/python -m pytest tests/unit/test_relevance_scorer.py -q -rxX
+
+...................                                                      [100%]
+19 passed in 0.09s
+
+
+Exit: 0
+
+$ .venv/bin/python -m pytest tests/unit/test_relevance_scorer.py -q --runxfail -k partial_overlap
+
+.                                                                        [100%]
+1 passed, 18 deselected in 0.03s
+
+
+Exit: 0
+
+$ .venv/bin/python -c from rag.evaluator.relevance_scorer import RelevanceScorer; s=RelevanceScorer(); q='Python Django web framework'; print('old:',s.score(q,[{'text':'Django is a Python web framework for rapid development'}])); print('new:',s.score(q,[{'text':'Python is a web framework for rapid development'}]))
+
+2026-10-12 23:58:20 [info     ] relevance_scored               avg_score=1.0 chunks_count=1 query_len=4
+old: 1.0
+2026-10-12 23:58:20 [info     ] relevance_scored               avg_score=0.75 chunks_count=1 query_len=4
+new: 0.75
+
+
+Exit: 0

@@ -1,0 +1,55 @@
+# eval run written by run_eval.py at 2026-10-13T03:56:36Z
+# model: sonnet (pinned)
+# graded: ../tools/plan-check
+# packages: 20 scored
+#   rubric.md  sha256:c68cf67177cc3d72
+#   evidence-guide.md  sha256:5eb2a09c3661f46d
+#   procedure.md  sha256:93d64f30bab3fe89
+#   SKILL.md  sha256:4688d0d0f4cf6cb3
+#
+grading 20 package(s) with rubric.md + evidence-guide.md + procedure.md, model sonnet, 5 worker(s)...
+  pkg-01: reject
+  pkg-03: accept
+  pkg-04: reject
+  pkg-02: accept
+  pkg-05: accept
+  pkg-06: reject
+  pkg-07: reject
+  pkg-10: reject
+  pkg-08: accept
+  pkg-09: accept
+  pkg-11: reject
+  pkg-12: reject
+  pkg-15: reject
+  pkg-13: accept
+  pkg-14: reject
+  pkg-17: reject
+  pkg-16: reject
+  pkg-18: reject
+  pkg-19: reject
+  pkg-20: accept
+
+item    category           gold    verdict  agree  note
+pkg-01  wrong-cause        reject  reject   yes    
+pkg-02  clear-accept       accept  accept   yes    
+pkg-03  clear-accept       accept  accept   yes    
+pkg-04  thread-convention  reject  reject   yes    
+pkg-05  clear-accept       accept  accept   yes    
+pkg-06  scope-creep        reject  reject   yes    
+pkg-07  wrong-cause        reject  reject   yes    
+pkg-08  clear-accept       accept  accept   yes    
+pkg-09  clear-accept       accept  accept   yes    
+pkg-10  unbuildable        reject  reject   yes    
+pkg-11  wrong-cause        reject  reject   yes    
+pkg-12  scope-creep        reject  reject   yes    
+pkg-13  clear-accept       accept  accept   yes    
+pkg-14  clear-accept       accept  reject   NO     failed: honest-claims, thread-conventions
+pkg-15  scope-creep        reject  reject   yes    
+pkg-16  wrong-cause        reject  reject   yes    
+pkg-17  unbuildable        reject  reject   yes    
+pkg-18  unbuildable        reject  reject   yes    
+pkg-19  scope-creep        reject  reject   yes    
+pkg-20  thread-convention  reject  accept   NO     graded accept
+
+categories: clear-accept 6/7  scope-creep 4/4  thread-convention 1/2  unbuildable 3/3  wrong-cause 4/4
+agreement: 18/20 scored items  (bar: 18/20: PASS)

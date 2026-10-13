@@ -1,53 +1,21 @@
-# Procedure: how this skill grades a plan package
-
-<!--
-THIS IS THE PART YOU WRITE, and it is a new kind of part. Weeks 1 and
-2, SKILL.md carried a numbered workflow and you only wrote judgment
-files. This week the workflow is gone from the frame: SKILL.md says
-"execute procedure.md", and these are the operating steps you author.
-The machinery is in your hands now.
-
-Your operator swap is the design brief. When your executor stalled
-because your rubric said WHAT to decide but not HOW to find the
-evidence, that was a procedure gap. This file is where those gaps get
-closed: a complete procedure lets someone who has never seen a plan
-package before (a groupmate, or the skill itself) grade one exactly the
-way you would.
-
-Under each stage heading below, write the concrete steps for that
-stage. The one-line note under each heading says what a complete
-procedure must decide there. Write steps, not intentions: "read the
-repro evidence before the plan, and note what behavior it pins down"
-is a step; "understand the context" is a wish.
--->
+# Procedure
 
 ## Read order
-
-<!-- What gets read, in what order, before any check is graded, and
-what to note down from each part while reading. A complete procedure
-decides the order (issue first? repro evidence first?) and says why
-the order matters for the checks that come later. -->
+1. Identify eval or live mode. Eval uses only the frozen bundle and ignores scope/voice; never fetch the live source. Live reads scope first and stops for an unfilled repo or out-of-scope issue, then reads voice-guide.md.
+2. Read rubric and evidence guide before grading; stop if checks, verdict rule or procedure are empty.
+3. Read issue context, thread and repo rules; record the requested outcome and explicit obligations. Read repro evidence next and record trigger, observed/expected behavior and controls before the candidate diagnosis can bias the reading.
+4. Read the entire candidate plan, deviations if present, then comment. Record approach, boundaries, implementation steps, validation, uncertainty and promises.
 
 ## Evidence gathering
-
-<!-- For each evidence family your rubric's checks name, the concrete
-gathering move: which part of the package (or, live, which page or
-thread location per your evidence guide) to pull the fact from, and
-what to record. A complete procedure leaves no check whose evidence an
-executor would have to hunt for. -->
+5. Follow every evidence-guide family: pair diagnosis/intervention with repro observations; pair scope edits with requested outcome; extract targets, operations and dependency resolutions for executability; pair validation with trigger, expected outcome and regression controls; compare certainty/risks/deviations with established observations; pair each explicit thread/repo obligation with the comment response.
+6. In live mode fetch issue body/comments and applicable repository docs using GitHub/web tools; locate the student's posted repro or quoted house pack. Do not fill missing draft content from unquoted local notes. Record source locations and short deciding quotes. If needed evidence is inaccessible, record that gap rather than guessing.
 
 ## Check execution
-
-<!-- How one check runs against gathered evidence: in what order the
-checks execute, what an executor does when evidence for a check is
-genuinely absent, and when a check may be graded without re-reading
-the whole package. A complete procedure makes two executors grade the
-same package the same way. -->
+7. Execute every rubric row in table order, even after a required failure. For each row apply only its stated pass condition to the gathered facts, rereading the specific source if a contradiction needs resolution. Grade pass when the condition is supported, fail when evidence contradicts it, unclear when necessary evidence is absent or unverifiable. Do not require headings, length, exact line numbers or a finished patch.
+8. Give each check one concise evidence line naming the fact or quote that decides it. Reuse gathered facts when sufficient; never substitute intuition for a rule. Flag procedure gaps in the readable summary without inventing a missing step.
+9. Live only: compare the outgoing comment with each voice rule and report violations with the rule quoted. Voice notes alone do not change the verdict unless a rubric check reads the same evidence.
 
 ## Verdict assembly
-
-<!-- How the per-check grades become the final accept or reject:
-apply your rubric's verdict rule, state how unclear grades enter it,
-and say what gets quoted in the output for the deciding check. A
-complete procedure produces the same verdict from the same grades,
-every time. -->
+10. Apply the rubric rule: accept only when all required checks pass; a required fail or unclear rejects. Preferred grades do not change the verdict. State deciding failures and their evidence in any readable summary.
+11. Emit the SKILL.md fenced JSON object with item id/URL, every check's name, pass/fail/unclear grade and deciding evidence, plus binary verdict. The JSON block is last, with nothing after it.
+12. After a live deviation update, repeat the whole procedure on the updated plan/comment before posting a follow-up.
